@@ -25,6 +25,7 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Buie
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
         TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
 schemes:
   Buie:
     build:
