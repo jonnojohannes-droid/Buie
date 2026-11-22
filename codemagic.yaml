@@ -1,10 +1,16 @@
 workflows:
-  ios-simulator:
-    name: iOS simulator build
+  ios-device-test:
+    name: iOS device test IPA (ad hoc)
     instance_type: mac_mini_m2
     max_build_duration: 60
+    triggering:
+      events:
+        - push
     environment:
       xcode: latest
+      ios_signing:
+        distribution_type: ad_hoc
+        bundle_identifier: com.jonnojohannes.buie
     scripts:
       - name: Install XcodeGen
         script: brew install xcodegen
@@ -12,14 +18,19 @@ workflows:
         script: bash scripts/setup.sh
       - name: Test core
         script: swift test
-      - name: Build simulator app
-        script: xcodebuild -project Buie.xcodeproj -scheme Buie -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - name: Configure signing
+        script: xcode-project use-profiles
+      - name: Build device IPA
+        script: xcode-project build-ipa --project Buie.xcodeproj --scheme Buie
     artifacts:
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/Buie.app
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
   ios-release:
     name: iOS signed release
     instance_type: mac_mini_m2
     max_build_duration: 60
+    triggering:
+      events: []
     environment:
       xcode: latest
       ios_signing:
