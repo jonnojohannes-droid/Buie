@@ -1,6 +1,6 @@
 name: Buie
 options:
-  bundleIdPrefix: com.example
+  bundleIdPrefix: com.jonnojohannes
   deploymentTarget:
     iOS: "16.4"
 packages:
@@ -18,7 +18,7 @@ targets:
         embed: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.buie
+        PRODUCT_BUNDLE_IDENTIFIER: com.jonnojohannes.buie
         PRODUCT_NAME: Buie
         SWIFT_VERSION: "5.0"
         GENERATE_INFOPLIST_FILE: YES

@@ -24,7 +24,7 @@ workflows:
       xcode: latest
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.example.buie
+        bundle_identifier: com.jonnojohannes.buie
     scripts:
       - name: Install XcodeGen
         script: brew install xcodegen
