@@ -27,6 +27,7 @@ final class AppState: ObservableObject {
     @Published var modelName: String?
     @Published var status = "Importeer een GGUF-instructiemodel om te beginnen."
     @Published var busy = false
+    @Published var canCancel = false
     @Published var document: ZipDocument?
     private var task: Task<Void, Never>?
     private let modelURL: URL
@@ -46,6 +47,7 @@ final class AppState: ObservableObject {
             return
         }
         busy = true
+        canCancel = false
         status = "Model importeren…"
         let destination = modelURL
         task = Task {
@@ -63,6 +65,10 @@ final class AppState: ObservableObject {
                     } else {
                         try manager.moveItem(at: temporary, to: destination)
                     }
+                    var storedURL = destination
+                    var values = URLResourceValues()
+                    values.isExcludedFromBackup = true
+                    try? storedURL.setResourceValues(values)
                 }.value
                 modelName = url.lastPathComponent
                 UserDefaults.standard.set(modelName, forKey: "modelName")
@@ -79,6 +85,7 @@ final class AppState: ObservableObject {
         let prompt = instruction.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !prompt.isEmpty, modelName != nil else { return }
         busy = true
+        canCancel = true
         document = nil
         status = "Het model werkt lokaal aan je opdracht…"
         let url = modelURL
@@ -100,6 +107,7 @@ final class AppState: ObservableObject {
                 status = error.localizedDescription
             }
             busy = false
+            canCancel = false
         }
     }
 
@@ -126,7 +134,9 @@ struct ContentView: View {
                         .disabled(state.busy || state.modelName == nil || state.instruction.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     if state.busy {
                         ProgressView()
-                        Button("Stop") { state.cancel() }
+                        if state.canCancel {
+                            Button("Stop") { state.cancel() }
+                        }
                     }
                 }
                 Section("Resultaat") {

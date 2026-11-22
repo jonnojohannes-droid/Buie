@@ -1,0 +1,32 @@
+name: Buie
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "16.4"
+packages:
+  BuieCore:
+    path: .
+targets:
+  Buie:
+    type: application
+    platform: iOS
+    sources:
+      - App
+    dependencies:
+      - package: BuieCore
+      - framework: build-apple/llama.xcframework
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.buie
+        PRODUCT_NAME: Buie
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Buie
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
+        TARGETED_DEVICE_FAMILY: "1,2"
+schemes:
+  Buie:
+    build:
+      targets:
+        Buie: all
